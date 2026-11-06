@@ -1,5 +1,5 @@
 {
-  description = "LiquidBounce development environment";
+  description = "GratefulDead development environment";
 
   inputs = { nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05"; };
 
@@ -13,7 +13,7 @@
       # The modern harfbuzz (12/13) pulled in by pango/cairo/gtk3 is ABI-
       # incompatible with that 2023-era shaper, which segfaults the JVM in
       # sun.font (FT_Load_Glyph -> af_shaper_get_coverage_hb) while rendering
-      # LiquidBounce's font atlas, crashing runClient. Rebuild freetype with
+      # GratefulDead's font atlas, crashing runClient. Rebuild freetype with
       # the harfbuzz shaper disabled so it never touches harfbuzz.
       freetype = pkgs.freetype.overrideAttrs (o: {
         configureFlags = (o.configureFlags or [ ]) ++ [ "--without-harfbuzz" ];
@@ -86,5 +86,5 @@
         PROVIDED_JCEF_PATH = "${jcef}";
       };
     };
-  nixConfig.bash-prompt-suffix = "[liquidbounce] ";
+  nixConfig.bash-prompt-suffix = "[gratefuldead] ";
 }

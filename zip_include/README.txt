@@ -11,7 +11,7 @@ https://liquidbounce.net/
 ➔ How to install on Fabric 26.3
 1. Install the Fabric Mod Loader for 26.3 (How to: https://fabricmc.net/use/).
 2. Create a folder called "mods" inside in the ".minecraft" directory.
-3. Copy "liquidbounce.jar" into the mods folder.
+3. Copy "gratefuldead.jar" into the mods folder.
 4. REQUIRED: Install the Kotlin fabric language mod (https://modrinth.com/mod/fabric-language-kotlin)
 5. REQUIRED: Install the Fabric API mod (https://modrinth.com/mod/fabric-api).
 6. OPTIONAL: Install the ViaFabricPlus Mod (https://modrinth.com/mod/viafabricplus).
@@ -25,7 +25,7 @@ https://liquidbounce.net/
 3. Click on "Versions" in the Lunar Launcher, select "Version 26.3" and click on Addons "Fabric".
 4. Click on settings button next to "Launch Game" and click on "Mods".
 5. Click on the folder icon "Open Mods Folder" next to "Search mods" field.
-6. Copy "liquidbounce.jar" into the mods folder.
+6. Copy "gratefuldead.jar" into the mods folder.
 7. REQUIRED: Install the Kotlin fabric language mod (https://modrinth.com/mod/fabric-language-kotlin)
 8. Launch Lunar Client.
 

@@ -48,7 +48,7 @@
 
   .keybinds {
     width: max-content;
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     overflow: hidden;
     font-size: 14px;
     min-width: 150px;

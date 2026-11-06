@@ -1,7 +1,7 @@
 <script lang="ts">
-    import LiquidBounceLogo from "../../../../components/LiquidBounceLogo.svelte";
+    import GratefulDeadLogo from "../../../../components/GratefulDeadLogo.svelte";
 
-    const idBase = `lb-logo-${Math.random().toString(36).slice(2, 9)}`;
+    const idBase = `gd-logo-${Math.random().toString(36).slice(2, 9)}`;
     const bannerGradientId = `${idBase}-banner`;
     const bannerTextGradientId = `${idBase}-banner-text`;
 
@@ -9,12 +9,12 @@
 </script>
 
 <div class="animated-logo">
-    <LiquidBounceLogo
+    <GratefulDeadLogo
         width="261.263px"
         height="98px"
         badgeFill={`url(#${bannerGradientId})`}
         badgeTextFill={`url(#${bannerTextGradientId})`}
-        badgeGroupClass="bounce-part"
+        badgeGroupClass="brand-badge"
     >
         <svelte:fragment slot="defs">
             <linearGradient id={bannerGradientId} gradientUnits="userSpaceOnUse" spreadMethod="repeat"
@@ -47,13 +47,13 @@
                 />
             </linearGradient>
         </svelte:fragment>
-    </LiquidBounceLogo>
+    </GratefulDeadLogo>
 
     <div class="divider"></div>
 
     <div class="message">
         <div>Thank you for <span>{anniversary} Years</span></div>
-        <div>of LiquidBounce!</div>
+        <div>of Grateful Dead!</div>
     </div>
 </div>
 
@@ -84,7 +84,7 @@
         }
     }
 
-    :global(.bounce-part) {
+    :global(.brand-badge) {
         filter: drop-shadow(0 0 16px var(--animated-logo-glow-primary-color))
             drop-shadow(0 0 30px var(--animated-logo-glow-secondary-color));
     }

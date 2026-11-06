@@ -48,7 +48,7 @@ fun Task.getContributors(repoOwner: String, repoName: String): List<String> = tr
 
     fun HttpRequest.Builder.generalSettings() = this
         .timeout(Duration.ofSeconds(10))
-        .header("User-Agent", "LiquidBounce-App")
+        .header("User-Agent", "GratefulDead-App")
         .header("X-GitHub-Api-Version", "2022-11-28")
         .header("Accept", "application/vnd.github+json")
         .apply {

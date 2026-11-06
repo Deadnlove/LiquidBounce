@@ -1,0 +1,45 @@
+/*
+ * This file is part of LiquidBounce (https://github.com/CCBlueX/LiquidBounce)
+ *
+ * Copyright (c) 2015 - 2026 CCBlueX
+ *
+ * LiquidBounce is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LiquidBounce is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
+ */
+package net.ccbluex.gratefuldead.features.module.modules.render
+
+import net.ccbluex.gratefuldead.event.events.PerspectiveEvent
+import net.ccbluex.gratefuldead.event.handler
+import net.ccbluex.gratefuldead.features.module.ClientModule
+import net.ccbluex.gratefuldead.features.module.ModuleCategories
+import net.ccbluex.gratefuldead.utils.input.InputBind
+import net.minecraft.client.CameraType
+
+object ModuleQuickPerspectiveSwap : ClientModule(
+    "QuickPerspectiveSwap", ModuleCategories.RENDER, disableOnQuit = true, bindAction = InputBind.BindAction.HOLD
+) {
+    val rearView by boolean("RearView", false)
+
+    @Suppress("unused")
+    private val perspectiveHandler = handler<PerspectiveEvent> { event ->
+        // Other camera modes already manage their own perspective.
+        if (ModuleFreeLook.running || ModuleFreeCam.running) return@handler
+
+        // Read the current view every tick so the vanilla F5 key stays in sync.
+        event.perspective = when (event.perspective) {
+            CameraType.FIRST_PERSON -> if (rearView) CameraType.THIRD_PERSON_BACK else CameraType.THIRD_PERSON_FRONT
+            CameraType.THIRD_PERSON_BACK -> CameraType.THIRD_PERSON_FRONT
+            CameraType.THIRD_PERSON_FRONT -> CameraType.THIRD_PERSON_BACK
+        }
+    }
+}

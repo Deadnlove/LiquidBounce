@@ -23,7 +23,7 @@ export const UNKNOWN_KEY = "key.keyboard.unknown";
 
 export const isClickGuiScreen = (screen: Screen | undefined) =>
     screen !== undefined &&
-    screen.class.startsWith("net.ccbluex.liquidbounce") &&
+    screen.class.startsWith("net.ccbluex.gratefuldead") &&
     (screen.title === "ClickGUI" || screen.title === "VS-CLICKGUI");
 
 export function isAnniversary() {

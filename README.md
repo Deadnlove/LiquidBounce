@@ -1,6 +1,6 @@
 <div align="center">
 <p>
-    <img width="200" src="https://raw.githubusercontent.com/CCBlueX/LiquidCloud/master/LiquidBounce/liquidbounceLogo.svg">
+    <img width="200" src="src-theme/public/img/menu/icon-gratefuldead.svg">
 </p>
 
 [Website](https://liquidbounce.net) |
@@ -10,7 +10,7 @@
 [X](https://x.com/CCBlueX)
 </div>
 
-LiquidBounce is a free and open-source mixin-based injection hacked client using the Fabric API for Minecraft.
+GratefulDead is a free and open-source mixin-based injection hacked client using the Fabric API for Minecraft.
 
 ## Issues
 
@@ -42,12 +42,12 @@ nor legally binding.
 
 ## Setting up a Workspace
 
-LiquidBounce uses Gradle; to make sure that it is installed properly, you can
+GratefulDead uses Gradle; to make sure that it is installed properly, you can
 check [Gradle's website](https://gradle.org/install/). It also requires [Node.js](https://nodejs.org) to be installed for
 our [theme](https://github.com/CCBlueX/LiquidBounce/tree/nextgen/src-theme).
 
 1. Clone the repository using `git clone --recurse-submodules https://github.com/CCBlueX/LiquidBounce`.
-2. CD into the local repository. (`cd LiquidBounce`)
+2. CD into the local repository. (`cd GratefulDead`)
 3. Run `./gradlew genSources` for better development experience (Optional).
 4. Open the folder as a Gradle project in your preferred IDE.
 5. Run the client. (`./gradlew runClient`)
@@ -56,13 +56,13 @@ our [theme](https://github.com/CCBlueX/LiquidBounce/tree/nextgen/src-theme).
 
 ### Mixins
 
-Mixins can be used to modify classes at runtime before they are loaded. LiquidBounce uses it to inject its code into the
+Mixins can be used to modify classes at runtime before they are loaded. GratefulDead uses it to inject its code into the
 Minecraft client. This way, none of Mojang's copyrighted code is shipped. If you want to learn more about it, check out
 its [Documentation](https://docs.spongepowered.org/5.1.0/en/plugin/internals/mixins.html).
 
 ## Contributing
 
-We appreciate contributions. So if you want to support us, feel free to make changes to LiquidBounce's source code and
+We appreciate contributions. So if you want to support us, feel free to make changes to GratefulDead's source code and
 submit a pull request.
 
 ## Stats

@@ -1,27 +1,30 @@
 {
   "schemaVersion": 1,
-  "id": "liquidbounce-gametest",
+  "id": "gratefuldead-gametest",
   "version": "1.0.0",
-  "name": "LiquidBounce Game Tests",
+  "name": "GratefulDead Game Tests",
   "environment": "client",
   "entrypoints": {
     "fabric-client-gametest": [
-      "net.ccbluex.liquidbounce.gametest.AutoRodRequirementsGameTest",
-      "net.ccbluex.liquidbounce.gametest.CommandGameTest",
-      "net.ccbluex.liquidbounce.gametest.ConfigPersistenceGameTest",
-      "net.ccbluex.liquidbounce.gametest.MarketplaceCommandGameTest",
-      "net.ccbluex.liquidbounce.gametest.PortalPositionGameTest",
-      "net.ccbluex.liquidbounce.gametest.LocalConfigTrackingGameTest",
-      "net.ccbluex.liquidbounce.gametest.HoleFillerBudgetGameTest",
-      "net.ccbluex.liquidbounce.gametest.FallDamageTrackerGameTest",
-      "net.ccbluex.liquidbounce.gametest.TeleportDisconnectGameTest",
-      "net.ccbluex.liquidbounce.gametest.EnchantCommandGameTest",
-      "net.ccbluex.liquidbounce.gametest.HitFXSoundRegistryGameTest",
-      "net.ccbluex.liquidbounce.gametest.NoRotateSetGameTest"
+      "net.ccbluex.gratefuldead.gametest.AutoRodRequirementsGameTest",
+      "net.ccbluex.gratefuldead.gametest.CommandGameTest",
+      "net.ccbluex.gratefuldead.gametest.ConfigPersistenceGameTest",
+      "net.ccbluex.gratefuldead.gametest.MarketplaceCommandGameTest",
+      "net.ccbluex.gratefuldead.gametest.PortalPositionGameTest",
+      "net.ccbluex.gratefuldead.gametest.LocalConfigTrackingGameTest",
+      "net.ccbluex.gratefuldead.gametest.HoleFillerBudgetGameTest",
+      "net.ccbluex.gratefuldead.gametest.FallDamageTrackerGameTest",
+      "net.ccbluex.gratefuldead.gametest.TeleportDisconnectGameTest",
+      "net.ccbluex.gratefuldead.gametest.EnchantCommandGameTest",
+      "net.ccbluex.gratefuldead.gametest.HitFXSoundRegistryGameTest",
+      "net.ccbluex.gratefuldead.gametest.NoRotateSetGameTest",
+      "net.ccbluex.gratefuldead.gametest.StorageEspRouteGameTest",
+      "net.ccbluex.gratefuldead.gametest.BaseFinderGameTest",
+      "net.ccbluex.gratefuldead.gametest.AutoRtpGameTest"
     ]
   },
   "depends": {
-    "liquidbounce": "*",
+    "gratefuldead": "*",
     "fabric-client-gametest-api-v1": "*"
   }
 }

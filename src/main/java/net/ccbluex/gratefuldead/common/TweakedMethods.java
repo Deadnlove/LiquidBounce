@@ -1,0 +1,76 @@
+/*
+ * This file is part of LiquidBounce (https://github.com/CCBlueX/LiquidBounce)
+ *
+ * Copyright (c) 2015 - 2026 CCBlueX
+ *
+ * LiquidBounce is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LiquidBounce is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
+ */
+package net.ccbluex.gratefuldead.common;
+
+import net.ccbluex.gratefuldead.features.module.modules.exploit.ModuleGhostHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+
+import java.util.function.Function;
+
+public final class TweakedMethods {
+
+    private TweakedMethods() {}
+
+    public static final Function<ClipContext, BlockHitResult> DEFAULT_MISS_FACTORY = (context) -> {
+        Vec3 delta = context.getFrom().subtract(context.getTo());
+        return BlockHitResult.miss(context.getTo(), Direction.getApproximateNearest(delta.x, delta.y, delta.z), BlockPos.containing(context.getTo()));
+    };
+
+    public static BlockHitResult tweakedRaycast(BlockGetter blockView, ClipContext context) {
+        if (ModuleGhostHand.INSTANCE.getRunning()) {
+            var returned = BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context, (contextx, pos) -> {
+                BlockState blockState = blockView.getBlockState(pos);
+
+                if (!ModuleGhostHand.INSTANCE.getTargetedBlocks().contains(blockState.getBlock()))
+                    return null;
+
+                VoxelShape voxelShape = contextx.getBlockShape(blockState, blockView, pos);
+
+                return blockView.clipWithInteractionOverride(contextx.getFrom(), contextx.getTo(), pos, voxelShape, blockState);
+            }, (contextx) -> null);
+
+            if (returned != null)
+                return returned;
+        }
+
+        return BlockGetter.traverseBlocks(context.getFrom(), context.getTo(), context, (contextx, pos) -> {
+            BlockState blockState = blockView.getBlockState(pos);
+            FluidState fluidState = blockView.getFluidState(pos);
+            Vec3 vec3d = contextx.getFrom();
+            Vec3 vec3d2 = contextx.getTo();
+            VoxelShape voxelShape = contextx.getBlockShape(blockState, blockView, pos);
+            BlockHitResult
+                blockHitResult = blockView.clipWithInteractionOverride(vec3d, vec3d2, pos, voxelShape, blockState);
+            VoxelShape voxelShape2 = contextx.getFluidShape(fluidState, blockView, pos);
+            BlockHitResult blockHitResult2 = voxelShape2.clip(vec3d, vec3d2, pos);
+            double d = blockHitResult == null ? Double.MAX_VALUE : contextx.getFrom().distanceToSqr(blockHitResult.getLocation());
+            double e = blockHitResult2 == null ? Double.MAX_VALUE : contextx.getFrom().distanceToSqr(blockHitResult2.getLocation());
+            return d <= e ? blockHitResult : blockHitResult2;
+        }, DEFAULT_MISS_FACTORY);
+    }
+
+}

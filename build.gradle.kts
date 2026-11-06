@@ -49,6 +49,13 @@ dokka {
 
 /** Includes dependency recursively in the JAR file */
 val jij = configurations.create("jij")
+val cefAddon = configurations.create("cefAddon") {
+    isTransitive = false
+}
+val rebrandCef = tasks.register<RebrandCefJar>("rebrandCefAddon") {
+    inputJar.set(layout.file(cefAddon.elements.map { it.single().asFile }))
+    outputJar.set(layout.buildDirectory.file("rebranded/gratefuldead-cef.jar"))
+}
 
 jij.excludeProvidedLibs()
 
@@ -95,7 +102,7 @@ allprojects {
 }
 
 loom {
-    accessWidenerPath = file("src/main/resources/liquidbounce.accesswidener")
+    accessWidenerPath = file("src/main/resources/gratefuldead.accesswidener")
 }
 
 // Client game tests: `src/gametest` is a separate source set/mod, never part of the main jar.
@@ -104,21 +111,21 @@ loom {
 fabricApi {
     configureTests {
         createSourceSet = true
-        modId = "liquidbounce-gametest"
-        // LiquidBounce is client-only; server game tests would otherwise be wired into `check`.
+        modId = "gratefuldead-gametest"
+        // GratefulDead is client-only; server game tests would otherwise be wired into `check`.
         enableGameTests = false
         eula = true
     }
 }
 
 // JCEF and the deep learning engine outlive the run directory, which is wiped before every run
-val gameTestLibraries = gradle.gradleUserHomeDir.resolve("liquidbounce-gametest")
+val gameTestLibraries = gradle.gradleUserHomeDir.resolve("gratefuldead-gametest")
 
 loom.runs.named("clientGameTest") {
     // Keeps the vanilla screens the test API waits for; the browser still starts. Drop it to test the theme UI.
-    systemProperties.put("net.ccbluex.liquidbounce.ui.basicMode", "true")
-    systemProperties.put("net.ccbluex.liquidbounce.browser.libraries", gameTestLibraries.resolve("mcef").path)
-    systemProperties.put("net.ccbluex.liquidbounce.deeplearning.engines", gameTestLibraries.resolve("djl").path)
+    systemProperties.put("net.ccbluex.gratefuldead.ui.basicMode", "true")
+    systemProperties.put("net.ccbluex.gratefuldead.browser.libraries", gameTestLibraries.resolve("mcef").path)
+    systemProperties.put("net.ccbluex.gratefuldead.deeplearning.engines", gameTestLibraries.resolve("djl").path)
 }
 
 tasks.named("runClientGameTest") {
@@ -173,8 +180,8 @@ dependencies {
 
     // Chromium, through the bundled CEF add-on. It depends on the client, so it stays out of the published POM and
     // brings nothing along.
-    include(libs.liquidbounce.cef)
-    localRuntime(libs.liquidbounce.cef) { isTransitive = false }
+    cefAddon(libs.cef.addon)
+    localRuntime(files(rebrandCef.flatMap { it.outputJar }))
 
     // Ktor Server
     jij(libs.ktor.server.core)
@@ -206,7 +213,6 @@ dependencies {
     // External utils
     compileOnlyApi(libs.fastutil4k.extensionsOnly)
     jij(libs.fastutil4k.moreCollections)
-    jij(libs.discord.ipc)
 
     // Test libraries
     testImplementation(kotlin("test"))
@@ -220,7 +226,7 @@ tasks.processResources {
     dependsOn("buildTheme")
 
     from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
+        into("resources/gratefuldead/themes/gratefuldead")
     }
 
     val modVersion = providers.gradleProperty("mod_version")
@@ -378,12 +384,12 @@ tasks.register<DetektCreateBaselineTask>("detektProjectBaseline") {
     exclude("**/resources/**", "**/build/**")
 }
 
-tasks.register<JavaExec>("liquidInstruction") {
+tasks.register<JavaExec>("gratefulInstruction") {
     group = "other"
-    description = "Run LiquidInstruction class."
+    description = "Run GratefulInstruction class."
 
     classpath = sourceSets.main.get().runtimeClasspath
-    mainClass.set("net.ccbluex.liquidbounce.LiquidInstruction")
+    mainClass.set("net.ccbluex.gratefuldead.GratefulInstruction")
 }
 
 tasks.runClient {
@@ -414,13 +420,15 @@ kotlin {
     abiValidation {
         filters {
             include {
-                annotatedWith.add("net.ccbluex.liquidbounce.features.addon.AddonApi")
+                annotatedWith.add("net.ccbluex.gratefuldead.features.addon.AddonApi")
             }
         }
     }
 }
 
 tasks.jar {
+    // The relocated browser is a generated file, so Fabric's jars metadata nests it explicitly.
+    from(rebrandCef.flatMap { it.outputJar }) { into("META-INF/jars") }
     val archivesBaseName = providers.gradleProperty("archives_base_name")
     val modVersion = providers.gradleProperty("mod_version")
     val mavenGroup = providers.gradleProperty("maven_group")
@@ -430,7 +438,8 @@ tasks.jar {
     inputs.property("maven_group", mavenGroup)
 
     manifest {
-        attributes["Main-Class"] = "net.ccbluex.liquidbounce.LiquidInstruction"
+        attributes["Build-Agent"] = "CodeRabbit"
+        attributes["Main-Class"] = "net.ccbluex.gratefuldead.GratefulInstruction"
         attributes["Implementation-Title"] = archivesBaseName.get()
         attributes["Implementation-Version"] = modVersion.get()
         attributes["Implementation-Vendor"] = mavenGroup.get()
@@ -463,7 +472,7 @@ publishing {
             version = publishVersion
 
             pom {
-                name = "LiquidBounce"
+                name = "GratefulDead"
                 description = "A free mixin-based injection hacked-client for Minecraft " +
                     "using the Fabric modding toolchain."
                 url = "https://liquidbounce.net/"
@@ -505,7 +514,7 @@ tasks.register<Copy>("copyZipInclude") {
 tasks.named<Jar>("sourcesJar") {
     dependsOn("buildTheme", "generateGitProperties")
     from("src-theme/dist") {
-        into("resources/liquidbounce/themes/liquidbounce")
+        into("resources/gratefuldead/themes/gratefuldead")
     }
 }
 

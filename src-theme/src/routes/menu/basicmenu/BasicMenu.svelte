@@ -9,7 +9,7 @@
 <div class="basic-menu" transition:fly|global={{duration: 700, x: -100}}>
     <div class="buttons">
         <ButtonContainer vertical>
-            <IconButton title="Full Mode" icon="liquidbounce" on:click={toggleBasicMode}/>
+            <IconButton title="Full Mode" icon="gratefuldead" on:click={toggleBasicMode}/>
             <IconButton title="Click GUI" icon="clickgui" on:click={() => openScreen("clickgui")}/>
             <IconButton title="Alt Manager" icon="user" on:click={() => openScreen("altmanager")}/>
             <IconButton title="Proxy Manager" icon="proxymanager" on:click={() => openScreen("proxymanager")}/>

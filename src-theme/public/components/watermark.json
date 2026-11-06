@@ -1,6 +1,6 @@
 {
   "name": "Watermark",
-  "description": "Displays LiquidBounce branding and client information.",
+  "description": "Displays Grateful Dead branding and client information.",
   "enabled": true,
   "singleton": true,
   "alignment": {

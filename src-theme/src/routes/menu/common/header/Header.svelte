@@ -1,5 +1,5 @@
 <script lang="ts">
-    import LiquidBounceLogo from "../../../../components/LiquidBounceLogo.svelte";
+    import GratefulDeadLogo from "../../../../components/GratefulDeadLogo.svelte";
     import Account from "./account/Account.svelte";
     import AnimatedLogo from "./AnimatedLogo.svelte";
     import Notifications from "./Notifications.svelte";
@@ -62,7 +62,7 @@
             <AnimatedLogo/>
         </div>
         <div class="logo" class:visible={!showAnniversaryLogo} aria-hidden={showAnniversaryLogo}>
-            <LiquidBounceLogo
+            <GratefulDeadLogo
                     width="261.263px"
                     height="98px"
                     badgeFill="var(--accent-color)"
@@ -79,7 +79,7 @@
   .header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 60px;
+    margin-bottom: clamp(24px, 4vh, 64px);
     align-items: center;
   }
 
@@ -91,7 +91,7 @@
     grid-area: 1 / 1;
     opacity: 0;
     pointer-events: none;
-    transition: opacity .5s ease;
+    transition: opacity .28s var(--menu-ease);
 
     &.visible {
       opacity: 1;

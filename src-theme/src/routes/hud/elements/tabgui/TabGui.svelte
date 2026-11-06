@@ -119,7 +119,7 @@
         background-clip: content-box;
         display: flex;
         flex-direction: column;
-        border-radius: 5px;
+        border-radius: var(--hud-radius);
         overflow: hidden;
     }
 
@@ -127,7 +127,7 @@
       background-clip: content-box;
       background-color: var(--tabgui-modules-background-color);
       margin-left: 6px;
-      border-radius: 5px;
+      border-radius: var(--hud-radius);
       min-width: 100px;
       display: flex;
       flex-direction: column;

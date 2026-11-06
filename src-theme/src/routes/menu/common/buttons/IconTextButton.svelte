@@ -23,7 +23,7 @@
       display: flex;
       border: none;
 
-      border-radius: 5px;
+      border-radius: var(--menu-radius, 18px);
       align-items: center;
       overflow: hidden;
       background: linear-gradient(to left, var(--menu-icon-text-button-background-color) 50%, var(--menu-icon-text-button-accent-color) 50%);

@@ -43,7 +43,7 @@
 
   .progress {
     position: relative;
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     background-color: var(--hotbar-status-background-color);
 
     &.align-right {
@@ -60,7 +60,7 @@
   }
 
   .progress-bar {
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     height: 20px;
     will-change: width;
     transition: ease width 0.2s;

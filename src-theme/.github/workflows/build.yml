@@ -65,7 +65,7 @@ jobs:
       #     prerelease: true
       #     name: "Build Release ${{ steps.version_tag.outputs.version }}"
       #
-      # - name: Upload to LiquidBounce Marketplace
+      # - name: Upload to GratefulDead Marketplace
       #   run: |
       #     curl -X POST \
       #       "https://api.liquidbounce.net/api/v3/marketplace/${{ env.MARKETPLACE_ITEM_ID }}/revisions" \
