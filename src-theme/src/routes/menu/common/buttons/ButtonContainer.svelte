@@ -9,12 +9,13 @@
 <style lang="scss">
 
     .button-container {
+      border: 1px solid rgba(255, 255, 255, .08);
       background-color: var(--menu-button-container-background-color);
-      padding: 15px 30px;
+      padding: 12px 18px;
       width: max-content;
-      border-radius: 5px;
+      border-radius: var(--menu-radius, 18px);
       display: flex;
-      column-gap: 20px;
+      column-gap: 12px;
 
       &.vertical {
         flex-direction: column;

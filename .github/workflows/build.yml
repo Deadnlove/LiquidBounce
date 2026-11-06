@@ -48,7 +48,7 @@ jobs:
             echo "$value"
           }
           
-          LB_VERSION=$(gradleprop 'mod_version')
+          GD_VERSION=$(gradleprop 'mod_version')
           JDK_VERSION=$(tomlprop 'jdk')
           MINECRAFT_VERSION=$(tomlprop 'minecraft')
           LOADER_VERSION=$(tomlprop 'fabric-loader')
@@ -56,7 +56,7 @@ jobs:
           KOTLIN_VERSION=$(tomlprop 'kotlin')
           FABRIC_KOTLIN_VERSION=$(tomlprop 'fabric-kotlin')
           
-          echo "lb_version=$LB_VERSION" >> "$GITHUB_OUTPUT"
+          echo "lb_version=$GD_VERSION" >> "$GITHUB_OUTPUT"
           echo "jdk_version=$JDK_VERSION" >> "$GITHUB_OUTPUT"
           echo "minecraft_version=$MINECRAFT_VERSION" >> "$GITHUB_OUTPUT"
           echo "loader_version=$LOADER_VERSION" >> "$GITHUB_OUTPUT"
@@ -64,7 +64,7 @@ jobs:
           echo "kotlin_version=$KOTLIN_VERSION" >> "$GITHUB_OUTPUT"
           echo "fabric_kotlin_version=$FABRIC_KOTLIN_VERSION" >> "$GITHUB_OUTPUT"
           
-          echo "LiquidBounce: $LB_VERSION"
+          echo "GratefulDead: $GD_VERSION"
           echo "JDK: $JDK_VERSION"
           echo "Minecraft: $MINECRAFT_VERSION"
           echo "Fabric Loader: $LOADER_VERSION"
@@ -111,19 +111,19 @@ jobs:
         env:
           MAVEN_USERNAME: ${{ secrets.MAVEN_TOKEN_NAME }}
           MAVEN_PASSWORD: ${{ secrets.MAVEN_TOKEN_SECRET }}
-          LB_VERSION: ${{ needs.extract-versions.outputs.lb_version }}
+          GD_VERSION: ${{ needs.extract-versions.outputs.lb_version }}
           MINECRAFT_VERSION: ${{ needs.extract-versions.outputs.minecraft_version }}
         run: |
           set -euo pipefail
 
           ./gradlew publish -x test -x detekt
           ./gradlew publish -x test -x detekt \
-            -Ppublish.version="${LB_VERSION}+${MINECRAFT_VERSION}-${GITHUB_SHA::7}-SNAPSHOT"
+            -Ppublish.version="${GD_VERSION}+${MINECRAFT_VERSION}-${GITHUB_SHA::7}-SNAPSHOT"
       - name: Upload artifact
         env:
           COMMIT_MESSAGE: ${{ github.event.head_commit.message }}
           JDK_VERSION: ${{ needs.extract-versions.outputs.jdk_version }}
-          LB_VERSION: ${{ needs.extract-versions.outputs.lb_version }}
+          GD_VERSION: ${{ needs.extract-versions.outputs.lb_version }}
           MINECRAFT_VERSION: ${{ needs.extract-versions.outputs.minecraft_version }}
           LOADER_VERSION: ${{ needs.extract-versions.outputs.loader_version }}
           FABRICAPI_VERSION: ${{ needs.extract-versions.outputs.fabricapi_version }}
@@ -133,24 +133,24 @@ jobs:
           set -euo pipefail
           
           cd build/libs
-          JAR=$(find . -regex '.*liquidbounce-[0-9.]*\.jar')
+          JAR=$(find . -regex '.*gratefuldead-[0-9.]*\.jar')
           if [ -z "$JAR" ]; then
             echo "[ERROR] built jar not found in build/libs" >&2
             exit 1
           fi
           
-          cp $JAR zip/liquidbounce.jar
+          cp $JAR zip/gratefuldead.jar
           cd zip
-          zip -r liquidbounce.zip *
-          md5sum liquidbounce.zip
+          zip -r gratefuldead.zip *
+          md5sum gratefuldead.zip
           
-          curl --connect-timeout 30 -m 300 -X POST -F "artifact=@liquidbounce.zip" \
+          curl --connect-timeout 30 -m 300 -X POST -F "artifact=@gratefuldead.zip" \
             -H "Authorization: ${{ secrets.NIGHTLY_PASS }}" \
             -F "gh_id=${{ github.event.head_commit.id }}" \
             -F "gh_ref=${{ github.ref }}" \
             -F "gh_message=${COMMIT_MESSAGE}" \
             -F "gh_timestamp=${{ github.event.head_commit.timestamp }}" \
-            -F "lb_version=$LB_VERSION" \
+            -F "lb_version=$GD_VERSION" \
             -F "mc_version=$MINECRAFT_VERSION" \
             -F "subsystem=fabric" \
             -F "jre_version=$JDK_VERSION" \
@@ -198,9 +198,9 @@ jobs:
         run: ./gradlew publish -x test -x detekt
       - name: Generate Script API definitions
         env:
-          GH_TOKEN: ${{ secrets.LIQUIDBOUNCE_PAT }}
+          GH_TOKEN: ${{ secrets.GRATEFULDEAD_PAT }}
           VERSION: ${{ needs.extract-versions.outputs.lb_version }}+${{ needs.extract-versions.outputs.minecraft_version }}
-        run: gh workflow run generate-definitions.yml -R CCBlueX/LiquidBounce-Addon-ScriptAPI -f liquidbounce="$VERSION"
+        run: gh workflow run generate-definitions.yml -R CCBlueX/GratefulDead-Addon-ScriptAPI -f gratefuldead="$VERSION"
 
   verify-pr:
     runs-on: ubuntu-latest
@@ -280,11 +280,11 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y libegl1 libegl-mesa0
       - name: Library versions
         id: libraries
-        run: echo "key=$(grep -E '^(liquidbounce-cef|djl) *=' gradle/libs.versions.toml | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
+        run: echo "key=$(grep -E '^(cef-addon|djl) *=' gradle/libs.versions.toml | sha256sum | cut -c1-16)" >> "$GITHUB_OUTPUT"
       - name: Cache JCEF and the deep learning engine
         uses: actions/cache@v5
         with:
-          path: ~/.gradle/liquidbounce-gametest
+          path: ~/.gradle/gratefuldead-gametest
           key: gametest-libraries-${{ runner.os }}-${{ steps.libraries.outputs.key }}
       - name: Client game tests
         env:

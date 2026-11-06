@@ -1,78 +1,72 @@
 <script lang="ts">
     import {fly} from "svelte/transition";
     import {createEventDispatcher} from "svelte";
-    import {backIn, backOut} from "svelte/easing";
     import TitleButtonIcon from "./TitleButtonIcon.svelte";
+    import {menuDuration, menuEase} from "../../../../util/menuMotion";
 
     export let title: string;
+    export let description = "";
     export let icon: string;
     export let index: number;
-
     let hovered = false;
-
     const dispatch = createEventDispatcher();
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="main-button" on:mouseenter={() => hovered = true} on:mouseleave={() => hovered = false} on:click={() => hovered = false}
-     on:click={() => dispatch("click")} out:fly|global={{duration: 400, x: -500, delay: index * 100, easing: backIn}}
-     in:fly|global={{duration: 400, x: -500, delay: index * 100, easing: backOut}}>
-    <div class="icon">
-        <TitleButtonIcon {icon} />
-    </div>
-
-    <div class="title">{title}</div>
-
-    <div class="wrapped-content">
-        <slot parentHovered={hovered}/>
-    </div>
+<div class="main-button" role="group" aria-label={title} on:mouseenter={() => hovered = true} on:mouseleave={() => hovered = false}
+     on:focusin={() => hovered = true} on:focusout={() => hovered = false}
+     out:fly|global={{duration: menuDuration, x: -16, easing: menuEase}}
+     in:fly|global={{duration: menuDuration, x: -16, delay: index * 35, easing: menuEase}}>
+    <button class="primary" on:click={() => dispatch("click")}>
+        <span class="ordinal" aria-hidden="true">{String(index + 1).padStart(2, "0")}</span>
+        <span class="icon"><TitleButtonIcon {icon}/></span>
+        <span class="label"><span class="title">{title}</span><span class="description">{description}</span></span>
+        <span class="arrow" aria-hidden="true">↗</span>
+    </button>
+    <div class="wrapped-content"><slot parentHovered={hovered}/></div>
 </div>
 
 <style lang="scss">
-
-  .main-button {
-    background-color: var(--menu-main-button-background-color);
-    width: 590px;
-    padding: 25px 35px;
-    display: grid;
-    grid-template-columns: max-content 1fr max-content;
-    align-items: center;
-    cursor: pointer;
-    border-radius: 5px;
-    column-gap: 25px;
-
-    background: linear-gradient(to left, var(--menu-main-button-background-color) 50%, var(--menu-main-button-accent-color) 50%);
-    background-size: 200% 100%;
-    background-position: right bottom;
-    will-change: background-position;
-    transition: background-position .2s ease-out;
-
-    &:hover {
-      background-position: left bottom;
-
-      .icon {
-        background-color: var(--menu-main-button-icon-hover-background-color);
-        color: var(--menu-main-button-icon-hover-foreground-color);
+    .main-button {
+      position: relative;
+      width: 100%;
+      border-radius: var(--menu-radius, 18px);
+      border: 1px solid rgba(255, 255, 255, .09);
+      background: rgba(255, 255, 255, .045);
+      transition: background .2s var(--menu-ease), border-color .2s var(--menu-ease), transform .2s var(--menu-ease);
+      &:hover, &:focus-within {
+        background: color-mix(in srgb, var(--accent-color) 10%, rgba(18, 25, 31, .85));
+        border-color: color-mix(in srgb, var(--accent-color) 60%, transparent);
+        transform: translateX(4px);
       }
     }
-  }
-
-  .icon {
-    background-color: var(--menu-main-button-icon-background-color);
-    color: var(--menu-main-button-icon-foreground-color);
-    width: 90px;
-    height: 90px;
-    border-radius: 50%;
-    transition: ease background-color 0.2s, ease color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .title {
-    font-size: 26px;
-    color: var(--menu-main-button-text-color);
-    font-weight: 600;
-  }
+    .primary {
+      width: 100%;
+      border: none;
+      border-radius: inherit;
+      background: transparent;
+      color: var(--menu-text-color);
+      display: grid;
+      grid-template-columns: 22px 58px 1fr 22px;
+      text-align: left;
+      align-items: center;
+      gap: 22px;
+      padding: 24px;
+      cursor: pointer;
+      font: inherit;
+    }
+    .ordinal { font-size: 11px; color: var(--accent-color); opacity: .55; font-weight: 700; letter-spacing: 1px; }
+    .icon {
+      color: var(--accent-color);
+      background: color-mix(in srgb, var(--accent-color) 11%, transparent);
+      border-radius: 16px;
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+    }
+    .label { display: flex; flex-direction: column; gap: 7px; }
+    .title { font-size: 24px; font-weight: 600; letter-spacing: -.5px; }
+    .description { font-size: 14px; opacity: .56; }
+    .arrow { font-size: 23px; opacity: .45; }
+    .wrapped-content { position: absolute; right: 60px; top: 50%; transform: translateY(-50%); }
 </style>

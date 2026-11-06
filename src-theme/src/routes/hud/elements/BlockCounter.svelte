@@ -42,7 +42,7 @@
 
   .counter {
     background-color: var(--blockcounter-background-color);
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     white-space: nowrap;
     padding: 5px 8px;
     font-weight: 500;

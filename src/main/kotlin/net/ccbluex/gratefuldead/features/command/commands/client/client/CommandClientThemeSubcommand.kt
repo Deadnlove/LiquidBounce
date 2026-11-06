@@ -1,0 +1,172 @@
+/*
+ * This file is part of LiquidBounce (https://github.com/CCBlueX/LiquidBounce)
+ *
+ * Copyright (c) 2015 - 2026 CCBlueX
+ *
+ * LiquidBounce is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * LiquidBounce is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with LiquidBounce. If not, see <https://www.gnu.org/licenses/>.
+ */
+package net.ccbluex.gratefuldead.features.command.commands.client.client
+
+import com.mojang.blaze3d.Blaze3D
+import net.ccbluex.gratefuldead.config.ConfigSystem
+import net.ccbluex.gratefuldead.features.command.CommandException
+import net.ccbluex.gratefuldead.features.command.CommandManager
+import net.ccbluex.gratefuldead.features.command.arguments.ClientStringArgumentType
+import net.ccbluex.gratefuldead.features.command.brigadier.CmdI18n
+import net.ccbluex.gratefuldead.features.command.brigadier.CmdLiteralScope
+import net.ccbluex.gratefuldead.features.command.brigadier.get
+import net.ccbluex.gratefuldead.features.command.brigadier.suggestions
+import net.ccbluex.gratefuldead.features.command.preset.pagedList
+import net.ccbluex.gratefuldead.integration.theme.Theme
+import net.ccbluex.gratefuldead.integration.theme.ThemeManager
+import net.ccbluex.gratefuldead.utils.client.bold
+import net.ccbluex.gratefuldead.utils.client.chat
+import net.ccbluex.gratefuldead.utils.client.clickablePath
+import net.ccbluex.gratefuldead.utils.client.copyable
+import net.ccbluex.gratefuldead.utils.client.markAsError
+import net.ccbluex.gratefuldead.utils.client.onClick
+import net.ccbluex.gratefuldead.utils.client.onHover
+import net.ccbluex.gratefuldead.utils.client.regular
+import net.ccbluex.gratefuldead.utils.client.variable
+import net.ccbluex.gratefuldead.utils.client.withColor
+import net.ccbluex.gratefuldead.utils.text.asText
+import net.ccbluex.gratefuldead.utils.text.joinToText
+import net.minecraft.ChatFormatting
+import net.minecraft.network.chat.ClickEvent
+import net.minecraft.network.chat.ComponentUtils.DEFAULT_SEPARATOR
+import net.minecraft.network.chat.HoverEvent
+import java.net.URI
+
+object CommandClientThemeSubcommand {
+    fun CmdLiteralScope.theme() {
+        literal("theme") {
+            pagedList(
+                pageSize = 8,
+                header = {
+                    "Available themes".asText().withColor(ChatFormatting.RED).bold(true)
+                },
+                items = {
+                    ThemeManager.themes
+                },
+                eachRow = { _, theme ->
+                    regular("\u2B25 ".asText()
+                        .withStyle(ChatFormatting.BLUE)
+                        .append(variable(theme.metadata.name))
+                        .append(regular(" ("))
+                        .append(variable(theme.metadata.id))
+                        .append(regular(" "))
+                        .append(variable(theme.metadata.version))
+                        .append(regular(")"))
+                        .append(regular(" by "))
+                        .append(theme.metadata.authors.joinToText(DEFAULT_SEPARATOR) { variable(it).copyable() })
+                        .append(regular(" from "))
+                        .append(variable(theme.origin.tag))
+                    ).onClick(
+                        ClickEvent.SuggestCommand(
+                            "${CommandManager.GlobalSettings.prefix}client theme set ${theme.metadata.id}"
+                        )
+                    ).onHover(
+                        HoverEvent.ShowText(
+                            variable("Click to set theme \"${theme.metadata.name}\".")
+                        )
+                    )
+                }
+            )
+            literal("set") {
+                argument(
+                    "theme",
+                    ClientStringArgumentType.word(),
+                    suggestions(strings = { ThemeManager.themeIds }),
+                ) { theme ->
+                    execSuspend { ctx ->
+                        this@theme.setTheme(ctx.get(theme))
+                    }
+                }
+            }
+            literal("browse") {
+                exec {
+                    Blaze3D.openPath(ThemeManager.themesFolder.toPath())
+                    chat(regular("Location: "), clickablePath(ThemeManager.themesFolder))
+                    1
+                }
+            }
+            literal("reload") {
+                execSuspend {
+                    reloadThemes()
+                }
+            }
+        }
+    }
+
+    @Suppress("detekt:ThrowsCount")
+    private suspend fun CmdI18n.setTheme(idOrUrl: String) {
+        val theme = try {
+            require(idOrUrl.contains("://")) { "Not a URL" }
+
+            val url = URI.create(idOrUrl).toURL()
+
+            // Disallow non-http(s) URLs
+            if (!url.protocol.equals("http", true) &&
+                !url.protocol.equals("https", true)
+            ) {
+                throw CommandException(
+                    t("theme.invalidProtocol",
+                        variable(url.protocol),
+                    )
+                )
+            }
+
+            // Disallow non-localhost URLs
+            if (!url.host.equals("localhost", true) &&
+                !url.host.equals("127.0.0.1", true)
+            ) {
+                throw CommandException(
+                    t("theme.localhostOnly")
+                )
+            }
+
+            // Loads the theme from the URL (will throw an exception if the theme is invalid)
+            Theme.load(url.toString())
+        } catch (_: IllegalArgumentException) {
+            ThemeManager.themes.find { it.metadata.id.equals(idOrUrl, true) }
+                ?: throw CommandException(
+                    t("theme.themeNotFound", variable(idOrUrl))
+                )
+        }
+
+        runCatching {
+            ThemeManager.theme = theme
+            ConfigSystem.store(ThemeManager)
+        }.onFailure {
+            chat(markAsError("Failed to switch theme: ${it.message}"))
+        }.onSuccess {
+            chat(regular("Switched theme to "), variable(theme.metadata.name).copyable(), regular("."))
+        }
+    }
+
+    private suspend fun reloadThemes() {
+        val prevCount = ThemeManager.themes.size
+
+        ThemeManager.load()
+        chat(regular("Reloaded themes. "))
+        val diff = ThemeManager.themes.size - prevCount
+        if (diff > 0) {
+            chat(regular("Added "), variable(diff.toString()), regular(" new theme(s)."))
+        } else if (diff < 0) {
+            chat(regular("Removed "), variable((-diff).toString()), regular(" theme(s)."))
+        } else {
+            chat(regular("No new themes added."))
+        }
+    }
+}

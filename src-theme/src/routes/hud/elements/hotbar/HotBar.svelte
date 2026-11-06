@@ -184,7 +184,7 @@
   .hotbar-elements {
     background-color: var(--hotbar-slot-background-color);
     position: relative;
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     overflow: hidden;
 
     .slider {
@@ -192,7 +192,7 @@
       height: 45px;
       width: 45px;
       position: absolute;
-      border-radius: 5px;
+      border-radius: var(--hud-radius);
       /* transition: linear left 0.05s; TODO: Animation is possible but annoying */
     }
 
@@ -209,7 +209,7 @@
   .offhand-slot {
     height: 45px;
     width: 45px;
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     background-color: var(--hotbar-slot-background-color);
     position: absolute;
     bottom: 0;
@@ -223,7 +223,7 @@
     font-weight: 500;
     background-color: var(--hotbar-item-name-background-color);
     padding: 5px 8px;
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     width: max-content;
   }
 

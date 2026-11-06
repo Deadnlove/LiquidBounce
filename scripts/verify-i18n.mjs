@@ -23,7 +23,7 @@ import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
-const LANG_DIR = join(__dirname, "..", "src", "main", "resources", "resources", "liquidbounce", "lang");
+const LANG_DIR = join(__dirname, "..", "src", "main", "resources", "resources", "gratefuldead", "lang");
 const BASELINE = "en_us.json";
 
 // Extract the format placeholders (%s, %d, %1$s, %%) from a translated string.

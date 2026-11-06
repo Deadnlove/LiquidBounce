@@ -2,11 +2,12 @@
     export let maxHealth: number;
     export let health: number;
 
-    let width = Math.ceil(health / maxHealth * 100);
-    $: width = Math.ceil(health / maxHealth * 100);
+    $: safeMax = Number.isFinite(maxHealth) && maxHealth > 0 ? maxHealth : 1;
+    $: safeHealth = Number.isFinite(health) ? Math.min(safeMax, Math.max(0, health)) : 0;
+    $: width = safeHealth / safeMax * 100;
 </script>
 
-<div class="health-progress">
+<div class="health-progress" role="progressbar" aria-label="Target health" aria-valuemin={0} aria-valuemax={safeMax} aria-valuenow={safeHealth}>
     <div class="thumb" style="width: {width}%;"></div>
 </div>
 
@@ -14,11 +15,16 @@
 
     .health-progress {
         position: relative;
+        margin: 0 16px 14px;
+        border-radius: 999px;
+        overflow: hidden;
+        background: rgba(255, 255, 255, .08);
     }
 
     .thumb {
-        height: 8px;
+        height: 5px;
         background-color: var(--targethud-health-progress-color);
-        transition: ease width 0.5s;
+        border-radius: inherit;
+        transition: width .22s var(--hud-ease);
     }
 </style>

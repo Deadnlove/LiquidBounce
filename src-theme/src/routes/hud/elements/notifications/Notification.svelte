@@ -19,7 +19,7 @@
     grid-template-columns: max-content 1fr;
     column-gap: 10px;
     background: var(--notification-background-color);
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     width: 300px;
     overflow: hidden;
     padding: 10px;
@@ -31,7 +31,7 @@
     width: 40px;
     background-position: center;
     background-repeat: no-repeat;
-    border-radius: 4px;
+    border-radius: var(--hud-radius-small);
     grid-area: a;
     transition: background-color 0.2s;
     position: relative;
@@ -59,11 +59,11 @@
         position: absolute;
         height: 10px;
         width: 10px;
-        border-radius: 5px;
+        border-radius: var(--hud-radius);
         top: 50%;
         transform: translate(-50%, -50%);
         background: var(--notification-toggle-knob-color);
-        transition: all 0.2s ease-out;
+        transition: all .22s var(--hud-ease);
       }
     }
 

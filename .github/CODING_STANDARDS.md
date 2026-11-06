@@ -1,11 +1,11 @@
-# Project LiquidBounce Coding Standards
+# Project GratefulDead Coding Standards
 
-We invite everyone to participate in the development of LiquidBounce by submitting pull requests and opening issues in
+We invite everyone to participate in the development of GratefulDead by submitting pull requests and opening issues in
 this repository. However, we have to enforce certain standards to keep our code readable, consistent and easier to
 maintain.
 
 We kindly ask you to use [Kotlin](https://kotlinlang.org/) instead of Java for new code, if possible. In the long term,
-it is our goal to largely migrate LiquidBounce to Kotlin.
+it is our goal to largely migrate GratefulDead to Kotlin.
 
 If you are adding Java code, make sure it uses the correct nullability marks
 and does not use legacy features from older versions of Java.
@@ -68,7 +68,7 @@ of the file:
  */
 ```
 
-If you are using IntelliJ IDEA, this header will be automatically added when you create a new file ([Config](/.idea/copyright/LiquidBounce.xml)).
+If you are using IntelliJ IDEA, this header will be automatically added when you create a new file ([Config](/.idea/copyright/GratefulDead.xml)).
 
 ### Tags
 
@@ -93,10 +93,10 @@ Our naming of packages follows the following format:
 
 *Example:*
 
-* `net.ccbluex.liquidbounce`
+* `net.ccbluex.gratefuldead`
 
-If your code is self-contained and not designed exclusively for LiquidBounce, we may allow you to include it in a
-separate package outside `net.ccbluex.liquidbounce`. Please note that we have to decide on a case by case basis.
+If your code is self-contained and not designed exclusively for GratefulDead, we may allow you to include it in a
+separate package outside `net.ccbluex.gratefuldead`. Please note that we have to decide on a case by case basis.
 
 *Example:*
 `net.vitox` instead of `net.ccbluex`

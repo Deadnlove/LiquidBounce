@@ -144,7 +144,20 @@
 
 <style lang="scss">
   .hud {
+    --hud-radius: 12px;
+    --hud-radius-small: 8px;
+    --hud-ease: cubic-bezier(.333333, 0, .666667, 1);
+    --hud-border: rgba(255, 255, 255, .10);
+    --hud-surface: rgba(12, 19, 27, .9);
+    font-variant-numeric: tabular-nums;
+    text-rendering: optimizeLegibility;
     height: 100vh;
     width: 100vw;
+    @media (prefers-reduced-motion: reduce) {
+      :global(*), :global(*::before), :global(*::after) {
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+      }
+    }
   }
 </style>

@@ -10,9 +10,7 @@
     const dispatch = createEventDispatcher();
 </script>
 
-<!-- svelte-ignore a11y-no-static-element-interactions -->
-<!-- svelte-ignore a11y-click-events-have-key-events -->
-<div class="child-button" on:click|stopPropagation={() => dispatch("click")} class:parent-hovered={parentHovered}>
+<button class="child-button" on:click|stopPropagation={() => dispatch("click")} class:parent-hovered={parentHovered}>
     <ToolTip color="var(--menu-base-color)" text="Join Realms server" />
 
     <div class="icon">
@@ -20,18 +18,21 @@
     </div>
 
     <div class="title">{title}</div>
-</div>
+</button>
 
 <style lang="scss">
 
     .child-button {
       position: relative;
+      border: none;
+      cursor: pointer;
+      font: inherit;
       display: flex;
       align-items: center;
-      border-radius: 5px;
+      border-radius: 10px;
       background-color: var(--menu-child-button-background-color);
-      transition: ease background-color .2s;
-      padding: 15px;
+      transition: background-color .2s var(--menu-ease);
+      padding: 10px;
 
       &.parent-hovered {
         background-color: var(--menu-child-button-hover-background-color);

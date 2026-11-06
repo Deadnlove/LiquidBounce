@@ -30,10 +30,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     font-size: 14px;
     font-weight: 500;
-    transition: ease box-shadow .2s;
+    transition: box-shadow .22s var(--hud-ease);
     position: relative;
     box-shadow: inset 0 0 0 0 var(--keystrokes-active-color);
     text-align: center;

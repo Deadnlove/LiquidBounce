@@ -1,8 +1,8 @@
 {
   "schemaVersion": 1,
-  "id": "liquidbounce",
+  "id": "gratefuldead",
   "version": "${version}",
-  "name": "LiquidBounce",
+  "name": "Grateful Dead",
   "description": "A free mixin-based injection hacked-client for Minecraft using the Fabric modding toolchain.",
   "authors": [
     "CCBlueX"
@@ -15,7 +15,7 @@
     "email": "support@liquidbounce.net"
   },
   "license": "GNU General Public License v3.0",
-  "icon": "resources/liquidbounce/icon_64x64.png",
+  "icon": "resources/gratefuldead/icon_64x64.png",
   "environment": "client",
   "entrypoints": {
     "main": []
@@ -23,12 +23,13 @@
   "custom": {
     "modmenu": {
       "links": {
-        "liquidbounce.generic.forum": "https://forums.ccbluex.net/"
+        "gratefuldead.generic.forum": "https://forums.ccbluex.net/"
       }
     }
   },
+  "jars": [{"file": "META-INF/jars/gratefuldead-cef.jar"}],
   "mixins": [
-    "liquidbounce.mixins.json"
+    "gratefuldead.mixins.json"
   ],
   "depends": {
     "minecraft": ["${minecraft_version}"],
@@ -42,5 +43,5 @@
   "breaks": {
     "viafabricplus": "<${viafabricplus_version}"
   },
-  "accessWidener": "liquidbounce.accesswidener"
+  "accessWidener": "gratefuldead.accesswidener"
 }

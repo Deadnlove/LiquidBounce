@@ -1,4 +1,6 @@
 <script lang="ts">
+    import {onDestroy} from "svelte";
+    import {menuEase} from "../../../../util/menuMotion";
     import ArmorStatus from "./ArmorStatus.svelte";
     import {listen} from "../../../../integration/ws.js";
     import type {PlayerData} from "../../../../integration/types";
@@ -8,7 +10,7 @@
     import type {TargetChangeEvent} from "../../../../integration/events";
 
     let target: PlayerData | null = null;
-    let visible = true;
+    let visible = false;
 
     let hideTimeout: number;
 
@@ -19,17 +21,21 @@
     }
 
     listen("targetChange", (data: TargetChangeEvent) => {
+        clearTimeout(hideTimeout);
+        if (data.target == null) {
+            visible = false;
+            return;
+        }
         target = data.target;
         visible = true;
-        clearTimeout(hideTimeout);
         startHideTimeout();
     });
 
-    startHideTimeout();
+    onDestroy(() => clearTimeout(hideTimeout));
 </script>
 
 {#if visible && target != null}
-    <div class="targethud" transition:fly={{ y: -10, duration: 200 }}>
+    <div class="targethud" transition:fly={{ y: -10, duration: 220, easing: menuEase }}>
         <div class="main-wrapper">
             <div class="avatar">
                 <img src="{REST_BASE}/api/v1/client/resource/skin?uuid={target.uuid}" alt="avatar" />
@@ -65,16 +71,16 @@
                 </div>
             </div>
             <div class="armor-stats">
-                {#if target.armorItems[3].count > 0}
+                {#if target.armorItems[3]?.count > 0}
                     <ArmorStatus itemStack={target.armorItems[3]} />
                 {/if}
-                {#if target.armorItems[2].count > 0}
+                {#if target.armorItems[2]?.count > 0}
                     <ArmorStatus itemStack={target.armorItems[2]} />
                 {/if}
-                {#if target.armorItems[1].count > 0}
+                {#if target.armorItems[1]?.count > 0}
                     <ArmorStatus itemStack={target.armorItems[1]} />
                 {/if}
-                {#if target.armorItems[0].count > 0}
+                {#if target.armorItems[0]?.count > 0}
                     <ArmorStatus itemStack={target.armorItems[0]} />
                 {/if}
             </div>
@@ -87,8 +93,10 @@
 <style lang="scss">
 
     .targethud {
-        background-color: var(--targethud-background-color);
-        border-radius: 5px;
+        background: color-mix(in srgb, var(--targethud-background-color) 45%, var(--hud-surface));
+        border: 1px solid var(--hud-border);
+        min-width: 260px;
+        border-radius: var(--hud-radius);
         overflow: hidden;
     }
 
@@ -97,21 +105,22 @@
         grid-template-areas:
             "a b d"
             "a c d";
-        column-gap: 10px;
-        padding: 10px 15px;
+        column-gap: 12px;
+        padding: 14px 16px;
     }
 
     .name {
         grid-area: b;
         color: var(--targethud-text-color);
-        font-weight: 500;
+        font-weight: 600;
+        letter-spacing: -.3px;
         align-self: flex-end;
     }
 
     .health-stats {
         grid-area: c;
         display: flex;
-        column-gap: 10px;
+        column-gap: 12px;
 
         .stat {
             .value {
@@ -127,20 +136,20 @@
         grid-area: d;
         display: flex;
         align-items: center;
-        column-gap: 10px;
+        column-gap: 12px;
         padding-left: 5px;
     }
 
     .avatar {
         grid-area: a;
-        height: 50px;
-        width: 50px;
+        height: 48px;
+        width: 48px;
         position: relative;
         image-rendering: pixelated;
         background-image: url("/img/steve.png");
         background-repeat: no-repeat;
         background-size: cover;
-        border-radius: 5px;
+        border-radius: var(--hud-radius);
         overflow: hidden;
 
         img {

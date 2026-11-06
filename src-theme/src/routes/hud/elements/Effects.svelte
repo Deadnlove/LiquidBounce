@@ -51,7 +51,7 @@
     flex-direction: column;
     gap: 4px;
     background-color: var(--effects-background-color);
-    border-radius: 5px;
+    border-radius: var(--hud-radius);
     padding: 4px 6px;
   }
 

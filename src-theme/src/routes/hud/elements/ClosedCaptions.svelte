@@ -51,7 +51,7 @@
     align-items: center;
     gap: 4px;
     padding: 2px 6px;
-    border-radius: 2px;
+    border-radius: var(--hud-radius-small);
     font-weight: 500;
     font-size: 14px;
   }

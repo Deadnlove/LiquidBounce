@@ -1,7 +1,9 @@
 <script lang="ts">
     import {onMount} from "svelte";
 
-    const TRANSITION_DURATION = 700;
+    import {menuDuration} from "../../../util/menuMotion";
+
+    const TRANSITION_DURATION = menuDuration;
 
     let ready = false;
 
